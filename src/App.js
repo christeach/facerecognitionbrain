@@ -11,6 +11,10 @@ import Clarifai from "clarifai";
 
 import "./App.css";
 
+
+// Test Picture:
+// https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80
+
 const app = new Clarifai.App({
   apiKey: "4ac7deb7249b4351a05ec2a377aa0070"
 });
@@ -123,8 +127,8 @@ class App extends Component {
           <div>
             <Logo />
             <Rank
-              name={this.state.user.name}
-              entries={this.state.user.entries}
+              name={user.name}
+              entries={user.entries}
             />
             <ImageLinkForm
               onInputChange={this.onInputChange}
