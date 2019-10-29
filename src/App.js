@@ -7,16 +7,11 @@ import SignIn from "./components/SignIn/SignIn";
 import Register from "./components/Register/Register";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Particles from "react-particles-js";
-import Clarifai from "clarifai";
 
 import "./App.css";
 
 // Test Picture:
 // https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80
-
-const app = new Clarifai.App({
-  apiKey: "4ac7deb7249b4351a05ec2a377aa0070"
-});
 
 const particleOptions = {
   particles: {
@@ -100,8 +95,14 @@ class App extends Component {
 
   onPictureSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    app.models
-      .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+    fetch("http://localhost:3000/imageurl", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        input: this.state.input
+      })
+    })
+      .then(response => response.json())
       .then(response => {
         if (response) {
           fetch("http://localhost:3000/image", {
@@ -115,7 +116,7 @@ class App extends Component {
             .then(count => {
               this.setState(Object.assign(this.state.user, { entries: count }));
             })
-            .catch(console.log)
+            .catch(console.log);
         }
         this.displayFaceBox(this.calculateFaceLocation(response));
       })
