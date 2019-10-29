@@ -11,7 +11,6 @@ import Clarifai from "clarifai";
 
 import "./App.css";
 
-
 // Test Picture:
 // https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80
 
@@ -30,6 +29,22 @@ const particleOptions = {
     }
   }
 };
+
+const initialState = {
+  input: "",
+  imageUrl: "",
+  box: {},
+  route: "signin",
+  isSignedIn: false,
+  user: {
+    id: "",
+    name: "",
+    email: "",
+    entries: 0,
+    joined: ""
+  }
+};
+
 class App extends Component {
   constructor() {
     super();
@@ -98,8 +113,9 @@ class App extends Component {
           })
             .then(response => response.json())
             .then(count => {
-              this.setState(Object.assign(this.state.user, { entries: count}));
-            });
+              this.setState(Object.assign(this.state.user, { entries: count }));
+            })
+            .catch(console.log)
         }
         this.displayFaceBox(this.calculateFaceLocation(response));
       })
@@ -108,7 +124,7 @@ class App extends Component {
 
   onRouteChange = route => {
     if (route === "signout") {
-      this.setState({ isSignedIn: false });
+      this.setState(initialState);
     } else if (route === "home") {
       this.setState({ isSignedIn: true });
     }
@@ -126,10 +142,7 @@ class App extends Component {
         {route === "home" ? (
           <div>
             <Logo />
-            <Rank
-              name={user.name}
-              entries={user.entries}
-            />
+            <Rank name={user.name} entries={user.entries} />
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onPictureSubmit={this.onPictureSubmit}
